@@ -1,0 +1,40 @@
+const demo = {
+  enquiries: [
+    {name:"Ananya R.", subject:"Pricing for monthly membership", channel:"Website chat", status:"Open", time:"9:42 AM", category:"Pricing"},
+    {name:"Karthik S.", subject:"Can I book a trial session?", channel:"Email", status:"Waiting", time:"9:18 AM", category:"Booking"},
+    {name:"Meera P.", subject:"Opening hours this weekend", channel:"Website chat", status:"Open", time:"Yesterday", category:"General"},
+    {name:"Rahul M.", subject:"Need to change my appointment", channel:"Email", status:"Resolved", time:"Yesterday", category:"Changes"}
+  ],
+  faqs:[
+    ["What are your opening hours?","Add your business opening hours here. The assistant should only answer using information approved by your team."],
+    ["What services do you offer?","Add your services, prices and availability. Do not publish until reviewed."],
+    ["How can customers contact your team?","Add your approved contact channels and expected response time."]
+  ]
+};
+let page="overview";
+const $=s=>document.querySelector(s);
+function shell(title,body){$("#pageTitle").textContent=title;$("#pageContent").innerHTML=body;}
+function table(rows){return `<div style="overflow:auto"><table class="table"><thead><tr><th>CUSTOMER</th><th>ENQUIRY</th><th>CHANNEL</th><th>STATUS</th><th>RECEIVED</th></tr></thead><tbody>${rows.map(x=>`<tr><td><b>${x.name}</b></td><td>${x.subject}<br><span class="subtle">${x.category}</span></td><td>${x.channel}</td><td><span class="status ${x.status==="Open"?"open":x.status==="Waiting"?"wait":""}">${x.status}</span></td><td>${x.time}</td></tr>`).join("")}</tbody></table></div>`}
+function render(){
+  document.querySelectorAll(".nav").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+  const data=demo.enquiries;
+  if(page==="overview"){shell("Overview",`<div class="stats"><div class="card stat"><small>Open enquiries</small><strong>12</strong><span class="trend">↓ 8% this week</span></div><div class="card stat"><small>Awaiting reply</small><strong>4</strong><span class="subtle">Needs team attention</span></div><div class="card stat"><small>Resolved this week</small><strong>38</strong><span class="trend">↑ 12% this week</span></div><div class="card stat"><small>Avg. first response</small><strong>18m</strong><span class="subtle">Demo metric</span></div></div><div class="grid-two"><div class="panel"><div class="panel-head"><h2>Recent enquiries</h2><button class="secondary" data-goto="inbox">View inbox</button></div>${table(data.slice(0,4))}</div><div class="panel"><div class="panel-head"><h2>Recent activity</h2><span class="subtle">Demo timeline</span></div><div class="activity"><div class="activity-item"><span class="dot"></span><div><b>New website enquiry received</b><small>Ananya R. · 9:42 AM</small></div></div><div class="activity-item"><span class="dot"></span><div><b>Reply draft prepared for review</b><small>Karthik S. · 9:22 AM</small></div></div><div class="activity-item"><span class="dot"></span><div><b>FAQ needs business approval</b><small>Opening hours · Yesterday</small></div></div></div></div></div><div class="panel"><div class="panel-head"><h2>Getting started</h2><span class="subtle">Setup checklist</span></div><p class="subtle">1. Add your business details &nbsp; · &nbsp; 2. Review FAQs &nbsp; · &nbsp; 3. Connect your website widget &nbsp; · &nbsp; 4. Invite your team</p></div>`);}
+  else if(page==="inbox"){shell("Inbox",`<div class="panel"><div class="panel-head"><h2>All enquiries</h2><span class="subtle">Sample records · not connected to a live inbox</span></div>${table(data)}</div>`);}
+  else if(page==="customers"){shell("Customers",`<div class="panel"><div class="panel-head"><h2>Customer directory</h2><span class="subtle">Demo records</span></div><div class="empty">Customer profiles will appear here when enquiries arrive.</div></div>`);}
+  else if(page==="knowledge"){shell("Knowledge base",`<div class="panel"><div class="panel-head"><h2>Business-approved answers</h2><button class="primary" id="addFaq">＋ Add FAQ</button></div>${demo.faqs.map(f=>`<div class="faq"><b>${f[0]}</b><small>${f[1]}</small></div>`).join("")}<p class="subtle">AI answers must be grounded in approved content. Uncertain questions should be handed to a person.</p></div>`);}
+  else if(page==="followups"){shell("Follow-ups",`<div class="panel"><div class="panel-head"><h2>Follow-up queue</h2><span class="subtle">No reminders are sent in this prototype</span></div><div class="empty">Your pending follow-ups will appear here.</div></div>`);}
+  else if(page==="reports"){shell("Reports",`<div class="stats"><div class="card stat"><small>Enquiries this month</small><strong>146</strong><span class="subtle">Sample metric</span></div><div class="card stat"><small>Resolution rate</small><strong>92%</strong><span class="subtle">Sample metric</span></div><div class="card stat"><small>Human handovers</small><strong>21</strong><span class="subtle">Sample metric</span></div><div class="card stat"><small>Customer rating</small><strong>4.8</strong><span class="subtle">Sample metric</span></div></div><div class="panel"><div class="empty">Live analytics will be available after the database and inbox are connected.</div></div>`);}
+  else if(page==="settings"){shell("Settings",`<div class="panel"><h2>Business profile</h2><div class="form-row"><label>Business name</label><input placeholder="Your business name"></div><div class="form-row"><label>Support email</label><input placeholder="support@example.com"></div><div class="form-row"><label>Business description</label><textarea placeholder="Describe your business and the help you provide"></textarea></div><button class="primary" onclick="alert('Prototype only — settings are not saved to a server yet.')">Save profile</button></div><div class="panel"><h2>Connections</h2><p class="subtle">Supabase authentication/database, AI gateway, email and website widget are not connected yet.</p></div>`);}
+}
+document.addEventListener("click",e=>{
+ const nav=e.target.closest("[data-page]");if(nav){page=nav.dataset.page;render();}
+ const goto=e.target.closest("[data-goto]");if(goto){page=goto.dataset.goto;render();}
+ if(e.target.id==="newEnquiry")showEnquiry();
+ if(e.target.id==="addFaq")showFaq();
+ if(e.target.id==="cancelModal")$("#modalRoot").remove();
+});
+function modal(title,content,save){const root=document.createElement("div");root.id="modalRoot";root.className="modal-backdrop";root.innerHTML=`<div class="modal"><h2>${title}</h2>${content}<div class="modal-actions"><button class="secondary" id="cancelModal">Cancel</button><button class="primary" id="saveModal">Save demo item</button></div></div>`;document.body.append(root);$("#saveModal").onclick=()=>{save(root);};}
+function showEnquiry(){modal("Create an enquiry",`<div class="form-row"><label>Customer name</label><input id="mName" placeholder="Customer name"></div><div class="form-row"><label>Enquiry</label><textarea id="mSubject" placeholder="What does the customer need help with?"></textarea></div><div class="form-row"><label>Channel</label><select id="mChannel"><option>Website chat</option><option>Email</option><option>Manual entry</option></select></div>`,root=>{const name=$("#mName").value.trim(),subject=$("#mSubject").value.trim();if(!name||!subject){alert("Please enter a name and enquiry.");return;}demo.enquiries.unshift({name,subject,channel:$("#mChannel").value,status:"Open",time:"Just now",category:"New"});root.remove();page="inbox";render();});}
+function showFaq(){modal("Add a FAQ",`<div class="form-row"><label>Customer question</label><input id="mQuestion" placeholder="What do customers ask?"></div><div class="form-row"><label>Approved answer</label><textarea id="mAnswer" placeholder="Enter an answer approved by your business"></textarea></div>`,root=>{const q=$("#mQuestion").value.trim(),a=$("#mAnswer").value.trim();if(!q||!a){alert("Please fill in both fields.");return;}demo.faqs.push([q,a]);root.remove();render();});}
+render();
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
