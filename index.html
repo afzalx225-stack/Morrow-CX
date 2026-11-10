@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827"><meta name="description" content="MorrowCX Support Desk">
+  <link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="styles.css">
+  <title>MorrowCX — Support Desk</title>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#"><span class="brand-mark">M</span><span><b>MorrowCX</b><small>SUPPORT DESK</small></span></a>
+      <div class="workspace-switch"><small>WORKSPACE</small><b id="workspaceName">My workspace</b><span>Demo mode</span></div>
+      <nav>
+        <button class="nav active" data-page="overview">▦ <span>Overview</span></button>
+        <button class="nav" data-page="inbox">▤ <span>Inbox</span><i>4</i></button>
+        <button class="nav" data-page="customers">♙ <span>Customers</span></button>
+        <button class="nav" data-page="knowledge">▧ <span>Knowledge base</span></button>
+        <button class="nav" data-page="followups">◷ <span>Follow-ups</span></button>
+        <button class="nav" data-page="reports">▥ <span>Reports</span></button>
+      </nav>
+      <div class="sidebar-bottom"><button class="nav" data-page="settings">⚙ <span>Settings</span></button><div class="profile"><div class="avatar">M</div><span><b>MorrowCX Admin</b><small>Owner workspace</small></span></div></div>
+    </aside>
+    <main class="main">
+      <header class="topbar"><div><small id="eyebrow">WORKSPACE</small><h1 id="pageTitle">Overview</h1></div><div class="top-actions"><span class="demo-pill">DEMO DATA</span><button class="primary" id="newEnquiry">＋ New enquiry</button></div></header>
+      <section id="pageContent"></section>
+      <footer> MorrowCX · Better customer experiences. Less business workload. <span>Prototype — no customer data is sent or stored on a server.</span></footer>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body></html>
