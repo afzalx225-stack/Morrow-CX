@@ -29,6 +29,15 @@
       <footer>MorrowCX · Better customer experiences. Less business workload. <span>Connected to your private business workspace.</span></footer>
     </main>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js"></script>
+  <script>
+    // Startup watchdog: if application scripts fail, never leave the page on an endless loader.
+    window.setTimeout(() => {
+      const root = document.getElementById("authRoot");
+      if (root && root.textContent.includes("Loading MorrowCX")) {
+        root.innerHTML = '<main class="auth-wrap"><section class="auth-card"><h1>MorrowCX could not start</h1><p class="subtle">The app script did not finish loading. Please reload once. If this message remains, send us this screen.</p></section></main>';
+      }
+    }, 8000);
+  </script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="app.js?v=20261111-2"></script>
 </body></html>
