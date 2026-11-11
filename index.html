@@ -7,25 +7,28 @@
   <title>MorrowCX — Support Desk</title>
 </head>
 <body>
-  <div class="app-shell">
+  <div id="authRoot"></div>
+  <div class="app-shell" id="appShell" hidden>
     <aside class="sidebar">
       <a class="brand" href="#"><span class="brand-mark">M</span><span><b>MorrowCX</b><small>SUPPORT DESK</small></span></a>
-      <div class="workspace-switch"><small>WORKSPACE</small><b id="workspaceName">My workspace</b><span>Demo mode</span></div>
+      <div class="workspace-switch"><small>WORKSPACE</small><b id="workspaceName">Loading workspace…</b><span id="workspaceMode">Connected</span></div>
       <nav>
         <button class="nav active" data-page="overview">▦ <span>Overview</span></button>
-        <button class="nav" data-page="inbox">▤ <span>Inbox</span><i>4</i></button>
+        <button class="nav" data-page="inbox">▤ <span>Inbox</span></button>
         <button class="nav" data-page="customers">♙ <span>Customers</span></button>
         <button class="nav" data-page="knowledge">▧ <span>Knowledge base</span></button>
         <button class="nav" data-page="followups">◷ <span>Follow-ups</span></button>
         <button class="nav" data-page="reports">▥ <span>Reports</span></button>
       </nav>
-      <div class="sidebar-bottom"><button class="nav" data-page="settings">⚙ <span>Settings</span></button><div class="profile"><div class="avatar">M</div><span><b>MorrowCX Admin</b><small>Owner workspace</small></span></div></div>
+      <div class="sidebar-bottom"><button class="nav" data-page="settings">⚙ <span>Settings</span></button><div class="profile"><div class="avatar">M</div><span><b id="profileName">MorrowCX Admin</b><small id="profileEmail">Signed in</small></span></div><button class="nav" id="signOutBtn">↪ <span>Sign out</span></button></div>
     </aside>
     <main class="main">
-      <header class="topbar"><div><small id="eyebrow">WORKSPACE</small><h1 id="pageTitle">Overview</h1></div><div class="top-actions"><span class="demo-pill">DEMO DATA</span><button class="primary" id="newEnquiry">＋ New enquiry</button></div></header>
+      <header class="topbar"><div><small id="eyebrow">WORKSPACE</small><h1 id="pageTitle">Overview</h1></div><div class="top-actions"><span class="live-pill">LIVE DATABASE</span><button class="primary" id="newEnquiry">＋ New enquiry</button></div></header>
+      <div id="notice" class="notice" hidden></div>
       <section id="pageContent"></section>
-      <footer> MorrowCX · Better customer experiences. Less business workload. <span>Prototype — no customer data is sent or stored on a server.</span></footer>
+      <footer>MorrowCX · Better customer experiences. Less business workload. <span>Connected to your private business workspace.</span></footer>
     </main>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
 </body></html>
