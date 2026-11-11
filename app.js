@@ -32,5 +32,31 @@ function showFaq(){modal("Add a business FAQ",'<div class="form-row"><label>Cust
 function showFollowup(){modal("Add a follow-up",'<div class="form-row"><label>Task</label><input id="fuTitle" maxlength="200" placeholder="Contact customer"></div><div class="form-row"><label>Notes</label><textarea id="fuNotes"></textarea></div><div class="form-row"><label>Due date</label><input id="fuDate" type="datetime-local"></div>',"Save follow-up",async root=>{const title=$("#fuTitle").value.trim();if(!title){alert("Enter a follow-up task.");return;}const due=$("#fuDate").value?new Date($("#fuDate").value).toISOString():null;const r=await supabase.from("follow_ups").insert({business_id:currentBusiness.id,title,notes:$("#fuNotes").value.trim()||null,due_at:due,created_by:currentUser.id});if(r.error){alert(r.error.message);return;}root.remove();await refreshData();render();});}
 document.addEventListener("click",async e=>{const nav=e.target.closest("[data-page]");if(nav){page=nav.dataset.page;render();}const go=e.target.closest("[data-goto]");if(go){page=go.dataset.goto;render();}if(e.target.id==="newEnquiry")showEnquiry();if(e.target.id==="addFaq")showFaq();if(e.target.id==="addFollowup")showFollowup();if(e.target.id==="signOutBtn"){await supabase.auth.signOut();currentUser=null;currentBusiness=null;authView("You have signed out.");}if(e.target.id==="saveBusiness"){const name=$("#businessNameSetting").value.trim();if(!name)return alert("Enter a business name.");const r=await supabase.from("businesses").update({name}).eq("id",currentBusiness.id);if(r.error)alert(r.error.message);else{currentBusiness.name=name;$("#workspaceName").textContent=name;notice("Business profile saved.");}}});
 supabase.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT"){currentUser=null;currentBusiness=null;authView("Please sign in.");}});
-(async()=>{const {data:{session}}=await supabase.auth.getSession();if(session)await startApp();else authView();})();
+// Render the sign-in screen immediately; never leave users on an indefinite loading screen.
+authView("Checking your sign-in status…");
+(async()=>{
+  try {
+    const sessionResult = await Promise.race([
+      supabase.auth.getSession(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("Connection timed out while checking your session. Please sign in again.")), 12000))
+    ]);
+    const session = sessionResult?.data?.session;
+    if (session) {
+      try {
+        await Promise.race([
+          startApp(),
+          new Promise((_, reject) => setTimeout(() => reject(new Error("Workspace loading timed out. Please sign in again.")), 15000))
+        ]);
+      } catch (error) {
+        console.error("MorrowCX startup error:", error);
+        authView(error?.message || "Could not load your workspace. Please sign in again.");
+      }
+    } else {
+      authView(sessionResult?.error?.message || "Please sign in to continue.");
+    }
+  } catch (error) {
+    console.error("MorrowCX session check failed:", error);
+    authView(error?.message || "Could not connect. Please check your internet and sign in again.");
+  }
+})();
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
