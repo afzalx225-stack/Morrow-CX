@@ -1,5 +1,9 @@
 const SUPABASE_URL = "https://xszampzfmrrxnwlbvywg.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_3gUBgGrBGnCBrf2I87ZlZQ_Kah-_ptz";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_3gUBgGrBGnCBrf2I87ZlQ_Kah-_ptz";
+if (!window.supabase || typeof window.supabase.createClient !== "function") {
+  document.getElementById("authRoot").innerHTML = '<main class="auth-wrap"><section class="auth-card"><h1>MorrowCX could not connect</h1><p class="subtle">The Supabase client library did not load. Check your internet connection and reload this page.</p></section></main>';
+  throw new Error("Supabase JavaScript library failed to load");
+}
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 let currentUser=null, currentBusiness=null, page="overview", enquiries=[], customers=[], faqs=[], followups=[];
 const $=s=>document.querySelector(s);
