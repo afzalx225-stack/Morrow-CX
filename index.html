@@ -29,38 +29,8 @@
       <footer>MorrowCX · Better customer experiences. Less business workload. <span>Connected to your private business workspace.</span></footer>
     </main>
   </div>
-  <script>
-    (function () {
-      const root = document.getElementById("authRoot");
-      let finished = false;
-      const showError = (title, detail) => {
-        if (finished) return;
-        finished = true;
-        root.innerHTML = '<main class="auth-wrap"><section class="auth-card"><h1>' + title + '</h1><p class="subtle">' + detail + '</p><button class="primary" onclick="location.reload()">Reload</button></section></main>';
-      };
-      const timer = setTimeout(() => showError("MorrowCX could not start", "A required script did not load in time. Check your connection and reload."), 30000);
-      const loadApp = () => {
-        if (!window.supabase || !window.supabase.createClient) {
-          showError("MorrowCX connection library unavailable", "The login service could not load. Try again with a stable internet connection.");
-          return;
-        }
-        const app = document.createElement("script");
-        app.src = "./app.js?v=20261112-2";
-        app.onload = () => { finished = true; clearTimeout(timer); };
-        app.onerror = () => showError("MorrowCX app script failed", "The website could not load its application code. Please reload.");
-        document.body.appendChild(app);
-      };
-      const cdn = document.createElement("script");
-      cdn.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js";
-      cdn.onload = loadApp;
-      cdn.onerror = () => {
-        const fallback = document.createElement("script");
-        fallback.src = "https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js";
-        fallback.onload = loadApp;
-        fallback.onerror = () => showError("MorrowCX login service unavailable", "Both login library sources failed to load. Check your connection and reload.");
-        document.body.appendChild(fallback);
-      };
-      document.body.appendChild(cdn);
-    })();
-  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"
+    onerror="this.onerror=null;var f=document.createElement('script');f.src='https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js';f.onerror=function(){document.getElementById('authRoot').innerHTML='<main class=&quot;auth-wrap&quot;><section class=&quot;auth-card&quot;><h1>Login service unavailable</h1><p class=&quot;subtle&quot;>The sign-in library could not load. Check your connection and reload.</p><button class=&quot;primary&quot; onclick=&quot;location.reload()&quot;>Reload</button></section></main>';};document.head.appendChild(f);"></script>
+  <script defer src="./app.js?v=20261112-3"
+    onerror="document.getElementById('authRoot').innerHTML='<main class=&quot;auth-wrap&quot;><section class=&quot;auth-card&quot;><h1>MorrowCX could not start</h1><p class=&quot;subtle&quot;>The application file could not load. Reload the page.</p><button class=&quot;primary&quot; onclick=&quot;location.reload()&quot;>Reload</button></section></main>';"></script>
 </body></html>
